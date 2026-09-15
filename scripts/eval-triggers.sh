@@ -183,6 +183,12 @@ run infra-design \
 run terraform-review \
   'Here is the terraform plan output before I apply — it shows a destroy/create on the RDS instance. Review it.'
 
+run feature-implementation \
+  'Add a CSV export button to the reports page, built the same way as the existing PDF export.'
+
+run refactoring \
+  'Split the 200-line checkout() function into smaller units without changing any behavior.'
+
 # ---------------------------------------------------------------------------
 # Near misses / boundaries
 # ---------------------------------------------------------------------------
@@ -200,6 +206,12 @@ run bug-fix \
 
 run infra-design \
   'Should this new service run on ECS or Lambda? Weigh the trade-offs and recommend a setup.'
+
+run refactoring \
+  'We have already decided the payments module should be split by responsibility. Carry out that restructuring, keeping behavior identical.'
+
+run feature-implementation \
+  'Implement the new /orders/{id}/cancel endpoint described in the ticket. Nothing is broken; this is new behavior.'
 
 # ---------------------------------------------------------------------------
 # Negative / explicit-boundary cases

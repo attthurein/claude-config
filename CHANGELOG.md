@@ -12,6 +12,8 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ### Changed
 
+- `scripts/eval-triggers.sh` covers the two new skills: direct-hit and
+  boundary cases for `feature-implementation` and `refactoring`.
 - Repository re-pointed at this fork: plugin and marketplace manifests, install
   and clone instructions, and changelog compare links now name
   `attthurein/claude-config`. README carries a fork notice crediting upstream,
