@@ -8,4 +8,4 @@ allowed-tools: Skill
 
 Task: $ARGUMENTS
 
-Which ONE of your available skills would you load first for this task? Reply with only that skill name and nothing else. Do not do the task.
+Which ONE of your available skills would you load first for this task? Reply with only that skill name and nothing else, or exactly "none" if no skill applies. Do not do the task.

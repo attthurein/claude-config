@@ -12,6 +12,7 @@
 !/README.md
 !/CONTRIBUTING.md
 !/CLAUDE.md
+!/CHANGELOG.md
 
 # Skills are whitelisted by name: re-include skills/ itself, re-exclude its
 # children, then name the tracked ones. (A child cannot be re-included while
@@ -24,7 +25,9 @@
 !/skills/bug-fix/
 !/skills/code-quality-review/
 !/skills/debugging/
+!/skills/feature-implementation/
 !/skills/infra-design/
+!/skills/refactoring/
 !/skills/security-audit/
 !/skills/terraform-review/
 !/skills/testing/
@@ -33,9 +36,14 @@
 !/output-styles/
 !/scripts/
 !/.github/
-
-# Config surface not used yet; listed so it is tracked the day it appears.
 !/agents/
+
+# Plugin packaging: the manifest that lets this repository be installed with
+# `/plugin install`, and the self-hosted marketplace that serves it.
+!/.claude-plugin/
+
+# Hook configuration and its wrapper script (the Stop-hook drift guard).
+!/hooks/
 
 # Never track local-only or generated files even inside tracked dirs.
 # Credentials are already covered by /* above; the explicit line is defense

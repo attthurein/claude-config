@@ -31,6 +31,8 @@ debugging → bug-fix → testing
 
 | If you are... | Use |
 |---|---|
+| Implementing a new feature or change request | `feature-implementation` |
+| Restructuring code without changing behavior | `refactoring` |
 | Investigating a failure with an unknown cause | `debugging` |
 | Fixing a confirmed bug | `bug-fix` |
 | Writing or improving tests | `testing` |
@@ -83,6 +85,8 @@ Instructions live in layers; **the narrowest layer that can own a rule, owns it*
 | `skills/` | Reusable workflows for specific tasks | On demand |
 | `commands/` | Explicit entry points | When `/name` is invoked |
 | `output-styles/` | Response format and tone | When activated |
+| `agents/` | Read-only reviewer subagents | When Claude delegates to one |
+| `hooks/` | Automation fired by session events | By the harness, on its event |
 | `.claude/` in a project | Project-specific knowledge | Always in that project |
 
 Project instructions take precedence over global instructions.
@@ -101,12 +105,21 @@ The separation keeps context lean: workflow detail loads only when relevant, and
 │   └── <name>.md
 ├── output-styles/    # reusable response styles
 │   └── <name>.md
+├── agents/           # read-only reviewer subagents
+│   └── <name>.md
+├── hooks/            # session-event automation
+│   ├── hooks.json            # Stop hook: configuration drift guard
+│   └── check-config-guard.sh # non-blocking wrapper around the drift check
+├── .claude-plugin/   # plugin packaging
+│   ├── plugin.json           # plugin manifest
+│   └── marketplace.json      # self-hosted marketplace serving it
 ├── scripts/          # repository checks
 │   ├── check-config.sh   # deterministic drift audit (runs in CI)
 │   └── eval-triggers.sh  # behavioral skill-routing eval (manual)
 ├── .github/          # CI configuration
 ├── README.md         # overview and adoption guide
 ├── CONTRIBUTING.md   # extension and contribution rules
+├── CHANGELOG.md      # what changed, per release
 └── LICENSE
 ```
 
@@ -132,6 +145,10 @@ Response formatting belongs in `output-styles/`.
 
 Project-specific behavior belongs in the project's `.claude/`.
 
+Delegated read-only review belongs in `agents/`.
+
+Event-driven automation belongs in `hooks/`.
+
 This avoids duplicated instructions, keeps context smaller, and makes ownership clear.
 
 ## Skills
@@ -140,6 +157,8 @@ Claude discovers skills by reading each `SKILL.md`'s `description`. The frontmat
 
 | Skill | Reviews / produces | Use when |
 |---|---|---|
+| `feature-implementation` | new behavior | Adding, building, or extending a feature — smallest correct change, reuse before abstracting |
+| `refactoring` | the same behavior, restructured | Renaming, extracting, moving, or deduplicating working code behind a safety net |
 | `debugging` | an unknown cause | Investigating intermittent failures, unexplained traces, or failures with no known trigger |
 | `bug-fix` | a defect | Fixing a confirmed bug — reproduce, root-cause, fix minimally, add a regression test |
 | `testing` | tests | Writing or improving tests, or fixing flaky tests |
@@ -158,6 +177,19 @@ Skills intentionally have narrow responsibilities.
 ```mermaid
 flowchart TD
     A[Task] --> B{What is the problem?}
+
+    B -->|Building new behavior| K[feature-implementation]
+    B -->|Restructuring without changing behavior| L[refactoring]
+
+    K -->|Unexplained failure| C
+    K -->|Confirmed defect| D
+    K -->|Tests for the new behavior| E
+    K -->|Structure must change first| L
+    K -->|Reviewing the finished change| F
+
+    L -->|Characterization tests| E
+    L -->|What to restructure| G
+    L -->|Behavior must change| K
 
     B -->|Failure, cause unknown| C[debugging]
     C -->|Root cause identified| D[bug-fix]
@@ -219,6 +251,55 @@ Output styles  → how the response is presented
 
 `concise` is the preferred style: short, direct responses that lead with the result.
 
+## Agents
+
+`agents/` contains subagents Claude can delegate to. Each runs in its own context, which keeps a
+long review out of the main conversation.
+
+Both shipped agents are **read-only**: neither is granted `Edit` or `Write`, so they report
+findings and never change code. Each pairs with the skill that owns its method.
+
+| Agent | Pairs with | Does |
+|---|---|---|
+| `agents/code-quality-reviewer.md` | `code-quality-review` | Reviews a diff, branch, or path for readability, maintainability, duplication, and compatibility |
+| `agents/security-auditor.md` | `security-audit` | Reviews trust boundaries, auth, input handling, and secret hygiene |
+
+The agent does not restate the method — it loads the skill and follows it. The skill stays the
+single home for the checklist.
+
+## Hooks
+
+`hooks/hooks.json` registers a `Stop` hook — it fires when Claude finishes responding, not on
+every tool call — that runs the drift check and prints any findings.
+
+It is deliberately **advisory**: `hooks/check-config-guard.sh` always exits `0`. Drift is
+reported, never enforced, and if `scripts/check-config.sh` is absent (someone copied only part of
+this configuration) the hook exits quietly instead of breaking the session.
+
+Installing this repository as a plugin registers the hook automatically. To enable it in a plain
+`~/.claude` clone instead, add this to `settings.json`:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/check-config-guard.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+The plugin form uses `${CLAUDE_PLUGIN_ROOT}` in place of `$HOME/.claude`, so the hook resolves to
+wherever the plugin was installed.
+
 ## Validation
 
 The repository uses two levels of validation.
@@ -231,6 +312,7 @@ The repository uses two levels of validation.
 - skill frontmatter
 - README skill-table membership
 - README skill-boundary diagram membership
+- README command-table membership
 - configuration structure
 
 CI runs this check on every push.
@@ -243,7 +325,7 @@ bash scripts/check-config.sh
 
 ### Behavioral validation
 
-`scripts/eval-triggers.sh` evaluates whether skill descriptions route representative tasks to the intended skill.
+`scripts/eval-triggers.sh` evaluates whether skill descriptions route representative tasks to the intended skill — and, just as importantly, whether ordinary work that `CLAUDE.md` already covers correctly loads no skill at all.
 
 It is deliberately **not run in CI** because it:
 
@@ -265,6 +347,26 @@ EVAL_RUNS=3 EVAL_MODEL=haiku bash scripts/eval-triggers.sh
 ```
 
 ## Adopting this config
+
+### As a plugin (recommended)
+
+The repository ships a plugin manifest and a self-hosted marketplace, so Claude Code can install
+and update it for you — skills, commands, agents, and the drift-guard hook together:
+
+```text
+/plugin marketplace add thixpin/claude-config
+/plugin install claude-config@thixpin
+```
+
+Update it later with:
+
+```text
+/plugin marketplace update thixpin
+```
+
+Installing as a plugin leaves your own `~/.claude` untouched, which makes it the safest option if
+you already have a configuration there. It does **not** install `CLAUDE.md` — global engineering
+guidelines are personal, so copy that file yourself if you want it.
 
 ### Just the skills
 
@@ -330,10 +432,11 @@ You do not need to understand the repository internals to start using it.
 When you want to extend the configuration:
 
 1. Add a skill, command, or output style according to [CONTRIBUTING.md](CONTRIBUTING.md).
-2. Run the mechanical validation.
-3. Run the behavioral trigger evaluation when changing skill descriptions.
-4. Review the diff.
-5. Commit only when ready.
+2. Add a [CHANGELOG.md](CHANGELOG.md) entry in the same change.
+3. Run the mechanical validation.
+4. Run the behavioral trigger evaluation when changing skill descriptions.
+5. Review the diff.
+6. Commit only when ready.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the detailed rules.
 

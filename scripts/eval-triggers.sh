@@ -24,7 +24,7 @@
 
 set -uo pipefail
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 2
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -38,7 +38,7 @@ if ! [[ "$EVAL_RUNS" =~ ^[1-9][0-9]*$ ]]; then
   exit 2
 fi
 
-INSTRUCTION='Which ONE of your available skills would you load first for this task? Reply with only that skill name and nothing else. Do not do the task.'
+INSTRUCTION='Which ONE of your available skills would you load first for this task? Reply with only that skill name and nothing else, or exactly "none" if no skill applies. Do not do the task.'
 
 pass=0
 failed=0
@@ -218,6 +218,28 @@ run security-audit \
 
 run terraform-review \
   'Review this Terraform implementation and plan for unsafe resource changes. Do not design a new infrastructure architecture.'
+
+# ---------------------------------------------------------------------------
+# Over-triggering / no-skill cases
+# ---------------------------------------------------------------------------
+#
+# The cases above only prove a skill fires when it should. These prove the
+# descriptions do not fire when they should not: ordinary work that CLAUDE.md
+# already covers must load no skill at all, or every task pays for a workflow
+# it does not need.
+
+printf '\nNO-SKILL CASES\n'
+
+# The backticks are literal Markdown in the prompt text, not command substitution.
+# shellcheck disable=SC2016
+run none \
+  'Rename the local variable `res` to `response` in utils/http.py. Nothing else.'
+
+run none \
+  'Fix a typo in the README: "recieve" should be "receive".'
+
+run none \
+  'What does the regular expression ^[0-9]{3}-[0-9]{4}$ match?'
 
 # ---------------------------------------------------------------------------
 # Summary

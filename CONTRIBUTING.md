@@ -55,12 +55,20 @@ The whole `commands/` directory is whitelisted — no `.gitignore` edit needed. 
 
 The whole `output-styles/` directory is whitelisted. Create `output-styles/<name>.md` with `name` and `description` frontmatter; the body is the style's rules.
 
+## Adding a subagent
+
+The whole `agents/` directory is whitelisted. Create `agents/<name>.md` with `name` and `description` frontmatter; `tools` is a **comma-separated string**, and omitting it inherits every tool. An agent that reviews rather than changes code must not list `Edit` or `Write` — that omission is what makes it read-only. Keep the body thin: load the skill that owns the method rather than restating its checklist.
+
 ## Adding any other top-level path
 
-Anything not whitelisted in `.gitignore` is dropped **silently** — no error, clean `git status`. `agents/` is pre-authorized; anything else needs its own `!/…` line first. Verify with `git status --ignored`, `scripts/check-config.sh`, or `/check-config`.
+Anything not whitelisted in `.gitignore` is dropped **silently** — no error, clean `git status`. Every new top-level file or directory needs its own `!/…` line before it can be committed; `agents/`, `hooks/`, `.claude-plugin/` and `CHANGELOG.md` already have one. Verify with `git status --ignored`, `scripts/check-config.sh`, or `/check-config`.
+
+## Changelog
+
+**Every change needs a `CHANGELOG.md` entry, in the same commit as the change.** Add it under `## [Unreleased]`, in the `Added` / `Changed` / `Fixed` / `Removed` subsection that fits, describing the behavior rather than the file touched. Cut a new version section only when a release tag is created.
 
 ## Validation
 
-- `bash scripts/check-config.sh` — deterministic drift checks: whitelist sync, frontmatter, README table and diagram membership. CI runs it on every push.
-- `bash scripts/eval-triggers.sh` — behavioral trigger eval: probes whether each skill's `description` routes representative tasks to it, via `claude -p`. Non-deterministic and token-costed, so it is deliberately not in CI — run it before tagging a release and after editing any skill `description` (see the README's Validation section for `EVAL_RUNS`/`EVAL_MODEL`).
+- `bash scripts/check-config.sh` — deterministic drift checks: whitelist sync, frontmatter, README skill/command table and diagram membership. CI runs it on every push.
+- `bash scripts/eval-triggers.sh` — behavioral trigger eval: probes whether each skill's `description` routes representative tasks to it and leaves no-skill tasks alone, via `claude -p`. Non-deterministic and token-costed, so it is deliberately not in CI — run it before tagging a release and after editing any skill `description` (see the README's Validation section for `EVAL_RUNS`/`EVAL_MODEL`).
 - `/check-config` — runs the script, then audits the judgment items: skill overlap, layering, README accuracy.
