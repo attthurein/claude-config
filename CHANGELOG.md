@@ -12,6 +12,9 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ### Fixed
 
+- Plugin failed to load with "Duplicate hooks file detected": the manifest named
+  `./hooks/hooks.json`, which Claude Code already discovers on its own. The key
+  is only for additional hook files, so it is dropped.
 - `architecture-review` never fired: its description opened as a method
   description rather than a trigger, and routing fell through to no skill on
   every structural-assessment prompt. Rewritten to lead with the triggers and
