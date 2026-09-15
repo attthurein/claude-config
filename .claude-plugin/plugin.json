@@ -1,13 +1,13 @@
 {
   "name": "claude-config",
-  "description": "Engineering guidelines, task workflow skills, slash commands, review subagents, and an output style for Claude Code.",
+  "description": "Engineering guidelines, task workflow skills, slash commands, review subagents, and an output style for Claude Code. Forked from thixpin/claude-config.",
   "version": "1.2.0",
   "author": {
-    "name": "Soe Thura",
-    "url": "https://github.com/thixpin"
+    "name": "Aung Thurein Tun",
+    "url": "https://github.com/attthurein"
   },
-  "homepage": "https://github.com/thixpin/claude-config",
-  "repository": "https://github.com/thixpin/claude-config",
+  "homepage": "https://github.com/attthurein/claude-config",
+  "repository": "https://github.com/attthurein/claude-config",
   "license": "MIT",
   "keywords": [
     "skills",

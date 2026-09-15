@@ -10,6 +10,14 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ## [Unreleased]
 
+### Changed
+
+- Repository re-pointed at this fork: plugin and marketplace manifests, install
+  and clone instructions, and changelog compare links now name
+  `attthurein/claude-config`. README carries a fork notice crediting upstream,
+  and `LICENSE` retains the upstream copyright with a second line for fork
+  additions.
+
 ### Added
 
 - `feature-implementation` skill — workflow for building a new feature or change
@@ -94,7 +102,7 @@ came from. Sections are cut at the release tags that already exist in the reposi
 - `CLAUDE.md` simplified; skills guidance that duplicated the skills themselves was
   removed (2aba309).
 
-[Unreleased]: https://github.com/thixpin/claude-config/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/thixpin/claude-config/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/thixpin/claude-config/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/thixpin/claude-config/releases/tag/v1.0.0
+[Unreleased]: https://github.com/attthurein/claude-config/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/attthurein/claude-config/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/attthurein/claude-config/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/attthurein/claude-config/releases/tag/v1.0.0

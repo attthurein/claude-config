@@ -1,8 +1,8 @@
 {
-  "name": "thixpin",
+  "name": "attthurein",
   "owner": {
-    "name": "Soe Thura",
-    "url": "https://github.com/thixpin"
+    "name": "Aung Thurein Tun",
+    "url": "https://github.com/attthurein"
   },
   "description": "Self-hosted marketplace serving the claude-config plugin.",
   "plugins": [

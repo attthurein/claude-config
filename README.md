@@ -1,5 +1,9 @@
 # Claude Code Configuration
 
+> Forked from [thixpin/claude-config](https://github.com/thixpin/claude-config)
+> by [Soe Thura](https://github.com/thixpin), whose work this builds on.
+> Upstream is tracked as the `upstream` remote; changes here are not endorsed by them.
+
 My personal [Claude Code](https://claude.com/claude-code) setup — global engineering guidelines, reusable skills, commands, and output styles, versioned so it can be restored on any machine.
 
 It lives at `~/.claude`, where Claude Code also stores runtime state such as sessions, history, caches, and credentials. `.gitignore` therefore uses a whitelist: everything is ignored by default, and only durable configuration is tracked.
@@ -354,14 +358,14 @@ The repository ships a plugin manifest and a self-hosted marketplace, so Claude 
 and update it for you — skills, commands, agents, and the drift-guard hook together:
 
 ```text
-/plugin marketplace add thixpin/claude-config
-/plugin install claude-config@thixpin
+/plugin marketplace add attthurein/claude-config
+/plugin install claude-config@attthurein
 ```
 
 Update it later with:
 
 ```text
-/plugin marketplace update thixpin
+/plugin marketplace update attthurein
 ```
 
 Installing as a plugin leaves your own `~/.claude` untouched, which makes it the safest option if
@@ -373,7 +377,7 @@ guidelines are personal, so copy that file yourself if you want it.
 Each skill is self-contained:
 
 ```bash
-git clone https://github.com/thixpin/claude-config.git /tmp/claude-config
+git clone https://github.com/attthurein/claude-config.git /tmp/claude-config
 cp -r /tmp/claude-config/skills/bug-fix ~/.claude/skills/
 ```
 
@@ -400,7 +404,7 @@ cp /tmp/claude-config/output-styles/concise.md ~/.claude/output-styles/
 Clone the repository directly:
 
 ```bash
-git clone https://github.com/thixpin/claude-config.git ~/.claude
+git clone https://github.com/attthurein/claude-config.git ~/.claude
 ```
 
 If `~/.claude` already exists, do not overwrite it blindly. Back up any existing configuration first.
@@ -410,7 +414,7 @@ You can initialize the existing directory as a Git repository instead:
 ```bash
 cd ~/.claude
 git init -b master
-git remote add origin https://github.com/thixpin/claude-config.git
+git remote add origin https://github.com/attthurein/claude-config.git
 git fetch origin
 git checkout -f master
 ```
@@ -455,6 +459,7 @@ Third-party skills remain independent projects with their own names and licenses
 
 ## License
 
-[MIT](LICENSE) © Soe Thura
+[MIT](LICENSE) © Soe Thura, with later additions © Aung Thurein Tun.
+The upstream copyright notice is retained as the MIT licence requires.
 
 Third-party skills installed under `skills/` remain separate projects under their respective licenses.
