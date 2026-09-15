@@ -3,7 +3,7 @@
 # locally or in CI. Judgment checks (skill overlap, layering) stay in
 # commands/check-config.md.
 set -u
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 1
 
 fail=0
 err() { printf 'FAIL: %s\n' "$*"; fail=1; }
