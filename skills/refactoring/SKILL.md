@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: Workflow for behavior-preserving restructuring — establish a characterization-test safety net first, then apply one mechanical change at a time, verifying after each step. Use when renaming, extracting, inlining, moving, or deduplicating code that already works. Deciding what to restructure belongs to architecture-review; adding or changing behavior belongs to feature-implementation.
+description: Workflow for behavior-preserving restructuring — establish a characterization-test safety net first, then apply one mechanical change at a time, verifying after each step. Use when extracting, inlining, moving, splitting, or deduplicating code that already works and the change spans several steps or files. A single local edit an editor could make on its own — renaming one variable, reflowing a line — needs no workflow and no safety net. Deciding what to restructure belongs to architecture-review; adding or changing behavior belongs to feature-implementation.
 ---
 
 # Refactoring

@@ -10,6 +10,15 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ## [Unreleased]
 
+### Fixed
+
+- `refactoring` over-triggered on trivial edits: its description claimed
+  "renaming", which routed a single variable rename to the skill. It now
+  scopes itself to changes spanning several steps or files.
+- `scripts/eval-triggers.sh` scored every case as a failure when the config was
+  installed as a plugin, because plugin skills answer as `<plugin>:<skill>`.
+  The matcher strips that namespace.
+
 ### Changed
 
 - `scripts/eval-triggers.sh` covers the two new skills: direct-hit and

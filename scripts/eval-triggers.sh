@@ -57,7 +57,11 @@ normalize() {
     tr -d '`' |
     sed '/^[[:space:]]*$/d' |
     head -n 1 |
-    sed 's/^[[:space:]]*//; s/[[:space:]]*$//'
+    sed 's/^[[:space:]]*//; s/[[:space:]]*$//' |
+    # A plugin-installed skill answers as `<plugin>:<skill>`; the same skill
+    # copied into ~/.claude/skills answers bare. Strip the namespace so the
+    # eval measures the description, not how the config happens to be installed.
+    sed 's/^[a-z0-9][a-z0-9-]*://'
 }
 
 run_claude() {
