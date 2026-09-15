@@ -12,6 +12,10 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ### Fixed
 
+- `architecture-review` never fired: its description opened as a method
+  description rather than a trigger, and routing fell through to no skill on
+  every structural-assessment prompt. Rewritten to lead with the triggers and
+  to name `refactoring` as the skill that carries the work out.
 - `refactoring` over-triggered on trivial edits: its description claimed
   "renaming", which routed a single variable rename to the skill. It now
   scopes itself to changes spanning several steps or files.
@@ -21,6 +25,9 @@ came from. Sections are cut at the release tags that already exist in the reposi
 
 ### Changed
 
+- Plugin manifest version tracks the released tags (1.3.0). Plugin caches are
+  version-keyed, so an edited skill never reaches an installed copy unless
+  the version advances.
 - `scripts/eval-triggers.sh` covers the two new skills: direct-hit and
   boundary cases for `feature-implementation` and `refactoring`.
 - Repository re-pointed at this fork: plugin and marketplace manifests, install

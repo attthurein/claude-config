@@ -1,6 +1,6 @@
 ---
 name: architecture-review
-description: Method for assessing a codebase's structure — duplication, single-responsibility violations, layering problems, and coupling — and recommending minimal, incremental improvements. Use when asked to review architecture, assess structure or technical debt, evaluate module boundaries, or plan a refactor. Reviews the system, not a single change: for reviewing one diff or branch use the code-quality-review skill.
+description: Assess a codebase's structure — module boundaries, layering, dependency direction, coupling, and duplication across modules — and recommend the smallest incremental moves that improve it. Use when asked to review or evaluate architecture, judge whether boundaries or layering are sound, locate structural or technical debt, or decide what to restructure. Reviews the system as a whole rather than one change: reviewing a single diff or branch belongs to code-quality-review, and carrying the restructuring out belongs to refactoring.
 ---
 
 # Architecture Review

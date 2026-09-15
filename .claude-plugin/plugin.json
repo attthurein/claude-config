@@ -1,7 +1,7 @@
 {
   "name": "claude-config",
   "description": "Engineering guidelines, task workflow skills, slash commands, review subagents, and an output style for Claude Code. Forked from thixpin/claude-config.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": {
     "name": "Aung Thurein Tun",
     "url": "https://github.com/attthurein"
