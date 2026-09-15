@@ -1,0 +1,15 @@
+{
+  "name": "thixpin",
+  "owner": {
+    "name": "Soe Thura",
+    "url": "https://github.com/thixpin"
+  },
+  "description": "Self-hosted marketplace serving the claude-config plugin.",
+  "plugins": [
+    {
+      "name": "claude-config",
+      "source": "./",
+      "description": "Engineering guidelines, task workflow skills, slash commands, review subagents, and an output style for Claude Code."
+    }
+  ]
+}

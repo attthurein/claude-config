@@ -1,0 +1,20 @@
+{
+  "name": "claude-config",
+  "description": "Engineering guidelines, task workflow skills, slash commands, review subagents, and an output style for Claude Code.",
+  "version": "1.2.0",
+  "author": {
+    "name": "Soe Thura",
+    "url": "https://github.com/thixpin"
+  },
+  "homepage": "https://github.com/thixpin/claude-config",
+  "repository": "https://github.com/thixpin/claude-config",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "code-review",
+    "security-audit",
+    "workflow",
+    "engineering-guidelines"
+  ],
+  "hooks": "./hooks/hooks.json"
+}
